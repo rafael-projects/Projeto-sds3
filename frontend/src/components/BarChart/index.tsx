@@ -11,7 +11,7 @@ const options = {
 
 const mockData = {
     labels: {
-        categories: ['Anakin', 'Barry Allen', 'Kal-El', 'Logan', 'Padmé']
+        categories: ['Barry Alen', 'Logan', 'Darth Vader', 'Naruto']
     },
     series: [
         {
