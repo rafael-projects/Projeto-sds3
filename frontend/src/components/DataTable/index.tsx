@@ -1,49 +1,55 @@
+import axios from "axios";
+import { formatLocalDate } from "components/Utils/format";
+import { BASE_URL } from "components/Utils/request";
+import { useEffect, useState } from "react";
+import { SalePage } from "types/sales";
 
 const DataTable = () => {
+
+    const [page, setPage] = useState<SalePage>({
+        first: true,
+        last: true,
+        number: 0,
+        totalElements: 0,
+        totalPages: 0,
+
+    });
+
+    useEffect(() => {
+        axios.get(`${BASE_URL}/sales?pages=0&size=8&sort=date,desc`)
+                .then(response => {
+                    setPage(response.data);
+                });
+    }, []);
+
     return (
         <div className="table-responsive">
-    <table className="table table-striped table-sm">
-        <thead>
-            <tr>
-                <th>Data</th>
-                <th>Vendedor</th>
-                <th>Clientes visitados</th>
-                <th>Negócios fechados</th>
-                <th>Valor</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>22/04/2021</td>
-                <td>Barry Allen</td>
-                <td>34</td>
-                <td>25</td>
-                <td>15017.00</td>
-            </tr>
-            <tr>
-                <td>22/04/2021</td>
-                <td>Logan</td>
-                <td>72</td>
-                <td>65</td>
-                <td>27017.00</td>
-            </tr>
-            <tr>
-                <td>22/04/2021</td>
-                <td>DarthVader</td>
-                <td>100</td>
-                <td>91</td>
-                <td>45017.00</td>
-            </tr>
-            <tr>
-                <td>22/04/2021</td>
-                <td>Naruto</td>
-                <td>48</td>
-                <td>40</td>
-                <td>14325.00</td>
-            </tr>
-        </tbody>
-    </table>
-</div>
+            <table className="table table-striped table-sm">
+                <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>Vendedor</th>
+                        <th>Clientes visitados</th>
+                        <th>Negócios fechados</th>
+                        <th>Valor</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {page.content?.map(item => (
+                        <tr key={item.id}>
+                            <td>{formatLocalDate(item.date, "dd/MM/yyyy")}</td>
+                            <td>{item.seller.name}</td>
+                            <td>{item.visited}</td>
+                            <td>{item.deals}</td>
+                            <td>{item.amount.toFixed(2)}</td>
+                        </tr>
+                    ))}
+
+
+
+                </tbody>
+            </table>
+        </div>
     );
 }
 
